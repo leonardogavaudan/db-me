@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import React, { useEffect, forwardRef } from 'react';
 
 export interface ModalProps {
@@ -41,10 +42,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(function Modal(
 			className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
 			onClick={handleClickOutside}
 		>
-			<div
-				className={`${className} bg-white p-6 rounded-lg shadow-lg relative`}
-				ref={ref}
-			>
+			<div className={classNames('bg-white shadow-lg', className)} ref={ref}>
 				{children}
 			</div>
 		</div>
