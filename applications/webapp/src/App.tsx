@@ -14,6 +14,7 @@ export function App() {
 	const [showModal, setShowModal] = useState(false);
 	const [searchQuery, setSearchQuery] = useState('');
 	const [searchResults, setSearchResults] = useState<string[]>([]);
+	const [activeSearchResultsIndex, setActiveSearchResultsIndex] = useState(0);
 	const modalRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
@@ -41,6 +42,30 @@ export function App() {
 			window.removeEventListener('keydown', handleKeyPress);
 		};
 	}, [showModal]);
+
+	useEffect(() => {
+		const handleKeyPress = (event: KeyboardEvent) => {
+			if (event.key === 'ArrowDown') {
+				event.preventDefault();
+				if (showModal && activeSearchResultsIndex < searchResults.length - 1) {
+					setActiveSearchResultsIndex((index) => index + 1);
+				}
+			}
+
+			if (event.key === 'ArrowUp') {
+				event.preventDefault();
+				if (showModal && activeSearchResultsIndex > 0) {
+					setActiveSearchResultsIndex((index) => index - 1);
+				}
+			}
+		};
+
+		window.addEventListener('keydown', handleKeyPress);
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyPress);
+		};
+	}, [showModal, activeSearchResultsIndex, searchResults.length]);
 
 	const handleSearchBarOnClick = () => {
 		setShowModal(true);
@@ -93,7 +118,16 @@ export function App() {
 					})}
 				>
 					{searchResults.map((result, index) => (
-						<div key={index} className="">
+						<div
+							key={index}
+							className={classNames([
+								'px-2 py-2 my-2',
+								{
+									'bg-sky-900 text-white rounded-lg':
+										index === activeSearchResultsIndex,
+								},
+							])}
+						>
 							{result}
 						</div>
 					))}
